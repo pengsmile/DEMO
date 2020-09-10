@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>CSS3 3D切割轮播图</title>
+	<style>
+		body {
+			margin: 0;
+			padding-top: 0;
+			background-color: #F7F7F7;
+		}
+		.view {
+			width: 560px;
+			height: 300px;
+			margin: 100px auto;
+			position: relative;
+			border: 1px solid #ccc;
+		}
+		ul {
+			height: 100%;
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+		li {
+			width: 100%;
+			height: 60px;
+			position: relative;
+			transform-style: preserve-3d;
+			transition: 1s;
+		}
+		span {
+			width: 100%;
+			height: 100%;
+			display: inline-block;
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+		li span:nth-child(1) {
+			transform: translatez(30px);
+			background: url("images/1.jpg");
+		}
+		li span:nth-child(2) {
+			transform: rotateX(90deg) translatez(30px);
+			background: url("images/2.jpg");
+		}
+		li span:nth-child(3) {
+			transform: rotateX(180deg) translatez(30px);
+			background: url("images/3.jpg");
+		}
+		li span:nth-child(4) {
+			transform: rotateX(270deg) translatez(30px);
+			background: url("images/4.jpg");
+		}
+		li:nth-child(2) span {
+			background-position: 0px -60px;
+		}
+		li:nth-child(3) span {
+			background-position: 0px -120px;
+		}
+		li:nth-child(4) span {
+			background-position: 0px -180px;
+		}
+		li:nth-child(5) span {
+			background-position: 0px -240px;
+		}
+		li:nth-child(2) {
+			transition-delay: 0.15s;
+		}
+		li:nth-child(3) {
+			transition-delay: 0.25s;
+		}
+		li:nth-child(4) {
+			transition-delay: 0.55s;
+		}
+		li:nth-child(5) {
+			transition-delay: 0.75s;
+		}
+		.prev, .next {
+			display: block;
+			width: 60px;
+			height: 60px;
+			text-align: center;
+			line-height: 60px;
+			margin-top: -30px;
+			font-size: 40px;
+			color: #FFF;
+			text-decoration: none;
+			background-color: rgba(0, 0, 0, 0.5);
+			position: absolute;
+			top: 50%;
+		}
+
+		.next {
+			right: 0;
+		}
+	</style>
+</head>
+<body>
+	<div class="view">
+		<ul>
+			<li>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</li>
+			<li>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</li>
+			<li>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</li>
+			<li>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</li>
+			<li class="one">
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</li>
+		</ul>
+		<a href="javascript:;" class="prev">&lt;</a>
+		<a href="javascript:;" class="next">&gt;</a>
+	</div>
+	<script src="js/jquery.min.js"></script>
+	<script>
+		var flag = true;
+		var current = 0;
+		$(".prev").on("click", function () {
+			if(flag) {
+				flag = false;
+//				setTimeout("flag=true" , 1700);
+				current++;
+				$("li").css({
+					'transform' : 'rotateX('+ 90 * current +'deg)'
+				})
+				throttle();
+			};
+		});
+
+		$(".next").on('click', function () {
+			if(flag) {
+				flag = false;
+//				setTimeout("flag = true", 1700);
+				current--;
+				$("li").css({
+					'transform': 'rotateX('+ 90 * current +'deg)'
+				})
+				throttle();
+			}
+		})
+		/*setInterval(playneext, 2000);
+		function playneext () {
+			$(".next").click();
+		}*/
+		setInterval(function () {
+			$(".next").click();
+		},2000)
+		function throttle () {
+			$("li")[4].addEventListener("transitionend", function () {
+				flag = true;
+			})
+		}
+
+		/*$('.one').get(3).addEventListener('transitionend', function () {
+			this.style.transitionDelay = '0.75s';
+		})*/
+	</script>
+</body>
+</html>

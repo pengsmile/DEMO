@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    </style>
+</head>
+
+<body>
+    <code class="language-js"><span class="kr">const</span> <span class="nx">dayOfWeek</span> <span class="o">=</span> <span class="nx">n</span> <span class="p">=&gt;</span> <span class="s1">'星期'</span> <span class="o">+</span> <span class="p">(</span><span class="s1">'日一二三四五六'</span><span class="p">[</span><span class="nx">n</span><span class="o">%</span><span class="mi">7</span><span class="p">]</span> <span class="o">||</span> <span class="nx">throwError</span><span class="p">(</span><span class="s1">'憨批传参2'</span><span class="p">)</span><span class="p">)</span>
+    </code>
+    <script>
+        /**
+         * 创建一个长度为5数组，生成随机数，并插入数组中，不重复，如有重复重新生成，不得使用循环
+         */
+        var index = 0;
+        var arr = new Array(5);
+        rand();
+
+        function rand() {
+            if (index >= 6) {
+                return
+            }
+            var rendom = Math.floor(2 + Math.random() * ((32 + 1) - 2))
+            arr.indexOf(rendom) != -1 ? (rand()) : (arr[index] = rendom, ++index, rand())
+        }
+
+        /**
+         * 输入:
+         *  nums1 = [1,2,3,0,0,0], m = 3
+            nums2 = [2,5,6],       n = 3
+            输出: [1,2,2,3,5,6]
+        */
+        var merge = function (nums1, m, nums2, n) {
+            let len1 = m - 1,
+                len2 = n - 1,
+                len = m + n - 1
+            while (len2 >= 0) {
+                if (len1 < 0) {
+                    nums1[len--] = nums2[len2--]
+                    continue
+                }
+                nums1[len--] = nums1[len1] >= nums2[len2] ? nums1[len1--] : nums2[len2--]
+            }
+        };
+
+        // 已知如下数组：var arr = [ [1, 2, 2], [3, 4, 5, 5], [6, 7, 8, 9, [11, 12, [12, 13, [14] ] ] ], 10];
+        // 编写一个程序将数组扁平化去并除其中重复部分数据，最终得到一个升序且不重复的数组
+        var arr = [ [1, 2, 2], [3, 4, 5, 5], [6, 7, 8, 9, [11, 12, [12, 13, [14] ] ] ], 10]
+        // 扁平化
+        let flatArr = arr.flat(4)
+        // 去重
+        let disArr = Array.from(new Set(flatArr))
+        // 排序
+        let result = disArr.sort(function(a, b) {
+            return a-b
+        })
+        console.log(result)
+
+        function pow (sum) {
+            let i = 0,
+                index = 0;
+            do {
+                index = Math.pow(2, i)
+                ++i;
+            } while(index < sum)
+            return index
+        }
+        console.time()
+        console.log(pow(10000000))
+        console.timeEnd()
+
+        function getNextMod(srcNum) {
+            srcNum |= srcNum >>> 1;
+            srcNum |= srcNum >>> 2;
+            srcNum |= srcNum >>> 4;
+            srcNum |= srcNum >>> 8;
+            srcNum |= srcNum >>> 16;
+            return srcNum + 1
+        }
+        console.time()
+        console.log(getNextMod(10000000))
+        console.timeEnd()
+
+        const dayOfWeek = n => '星期' + ('日一二三四五六'[n%7] || console.error('憨批传参') );
+        console.log(dayOfWeek(4))
+
+        // getyear()
+        function getyear() {
+            let y = 2500;
+            let i = 0;
+            for (let index = 1900; index < y; index++) {
+                if ((index % 4 == 0 && index % 100 != 0) || (index % 400 == 0 && index % 4000 != 0)) {
+                    ++i;
+                    console.log(i + ':' + index)
+                }
+            }
+            
+        }
+
+        // 左移位移运算符 << 迅速得到2的N次方
+        // 1 << 2   4 即2的2次方
+        // 1 << 10 2的10次方
+        /**
+         * a = 2e9    输出2000000000
+         * ^ 切换变量 let toggle = 0, toggle ^= 1;
+         * 偶数 & 1 = 0  7 & 1 // 1 奇数 & 1  返回 1
+            奇数 & 1 = 1   8 & 1 // 0 偶数 & 1 返回 0
+
+         */
+        console.log(~~11.71)     // 11
+        console.log(11.71 >> 0)  // 11
+        console.log(11.71 << 0)  // 11
+        console.log(11.71 | 0)   // 11
+        console.log(11.71 >>> 0) // 11
+
+        // 使用^= 完成交换
+        // --- before ---
+        // let temp = a; a = b; b = temp; // 传统，但需要借助临时变量
+        // b = [a, a = b][0] // 借助数组
+        
+        // // --- after ---
+        // let a = 7
+        // let b = 1
+        // a ^= b
+        // b ^= a
+        // a ^= b
+        // console.log(a)   // 1
+        // console.log(b)   // 7
+        
+        // [a, b] = [b, a]; // ES6，解构赋值
+
+
+        // // 使用^判断符号是否相同
+        // (a ^ b) >= 0; //  true 相同; false 不相同
+        // let x = 11;
+        // let y = 11;
+        // x ^ y  // true 为相同
+
+
+        // let s = 1171;
+        // // 使用^来检查数字是否不相等
+        // // --- before ---
+        // if (s !== 1171) {
+
+        // };
+        
+        // // --- after ---
+        // if (s ^ 1171) {
+
+        // };
+
+        // // n & (n - 1)，如果为 0，说明 n 是 2 的整数幂
+        // let n = 24;
+        // n & (n - 1)
+
+        // 使用toString(16)取随机字符串
+        Math.random().toString(16).substring(2, 15);
+        // 使用 split(0)
+        // 使用数字来做为 split 的分隔条件可以节省2字节
+         // --- before ---
+        // "alpha,bravo,charlie".split(",");
+        
+        // --- after ---
+        // "alpha0bravo0charlie".split(0);
+
+        // 使用.link() 创建链接
+         // --- before ---
+        // let b = `<a herf="www.google.com">google</a>`;
+        
+        // // --- after ---
+        // let b =  google .link( www.google.com );
+
+
+        var singleNumber = function(nums) {
+            return nums.find(v => {
+                let found = nums.filter(j =>{
+                    return v == j
+                })
+                if (found.length <= 1){
+                    return v
+                }
+                
+            })
+        };
+        let found = singleNumber([4,1,2,1,2]);
+        // console.log(found);
+
+        var majorityElement = function(nums) {
+            // let index = 2;
+            return nums.map(v => {
+                let found = nums.filter(j =>{
+                    return v == j
+                })
+                return {
+                    index: found.length,
+                    val: v
+                }
+            })
+        };
+        console.log(majorityElement([1,1,1,2,2,2,2]))
+    </script>
+</body>
+
+</html>

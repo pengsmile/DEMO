@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>c3倒影</title>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        div {
+            width: 300px;
+            border-radius: 15px;
+        }
+
+        img {
+            width: 300px;
+            /* -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(50%, transparent), to(rgba(250, 250, 250, 0.3)));*/
+            -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, right bottom, from(transparent), color-stop(40%, yellow), to(pink));
+        }
+        .top {
+            width: 200px;
+            height: 150px;
+            background: -webkit-gradient(linear,left top,left bottom,from(green),to(pink),color-stop(0.5,#000),color-stop(50%,#ffffff));
+        background-origin:content-box;
+        background-clip: content-box;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="top">
+
+        </div>
+        <img src="./demo-2-bg.jpg" alt="">
+    </div>
+</body>
+
+</html>

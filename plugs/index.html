@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+    //   class Person {
+    //     constructor(name, age, love) {
+    //       this.name = name;
+    //       this.age = age;
+    //       this.love = love;
+    //     }
+
+    //     getName() {
+    //       return this.name;
+    //     }
+    //   }
+
+    //   // Student类继承Person类
+    //   class Student extends Person {
+    //     constructor(name, age, gender, classes) {
+    //       super(name, age, classes);
+    //       this.gender = gender;
+    //       this.classes = classes;
+    //     }
+
+    //     getGender() {
+    //       console.log(this);
+    //       return this.gender;
+    //     }
+    //   }
+
+    //   let sty = new Student("allen", 19, "男", "bann");
+    //   console.log(sty.getGender());
+
+      let animal = {
+        name: "Animal",
+        eat() {
+          alert(`${this.name} eats.`);
+        }
+      };
+
+      let rabbit = {
+        __proto__: animal,
+        eat() {
+          super.eat();
+        },
+        rabbit: 1
+      };
+
+      let longEar = {
+        __proto__: rabbit,
+        eat() {
+            super.eat();
+        },
+        longEar: 2
+      };
+      longEar.eat()
+    </script>
+  </body>
+</html>

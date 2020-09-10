@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://cdn.staticfile.org/moment.js/2.24.0/moment.js"></script>
+</head>
+<body>
+    <script>
+
+        //  getyear()
+        const l = console.log
+        function getyear() {
+            let y = 2500;
+            let i = 0;
+            for (let index = 1900; index < y; index++) {
+                if ((index % 4 == 0 && index % 100 != 0) || (index % 400 == 0 && index % 4000 != 0)) {
+                    ++i;
+                    console.log(i + ':' + index)
+                }
+            }
+            
+        }
+
+        var now = new Date('2020-07-05');
+        var nowTime = now.getTime() ;
+        var day = now.getDay();
+        var oneDayTime = 24*60*60*1000 ;
+        var MondayTime = nowTime - (day-1)*oneDayTime ;//显示周一
+        var SundayTime =  nowTime + (7-day)*oneDayTime ;//显示周日
+        let date = new Date(MondayTime);
+        // console.log(new Date(SundayTime))
+
+        function getDates() {
+            var new_Date = new Date('2020-07-05')
+            var timesStamp = new_Date.getTime();
+            var currenDay = new_Date.getDay();
+            // var dates = [];
+            // for(var i = 0; i < 7; i++) {
+            //     dates.push(new Date(timesStamp + 24 * 60 * 60 * 1000 * (i - (currenDay + 6) % 7)).toLocaleDateString().replace(/[年月]/g, '-').replace(/[日上下午]/g, ''));
+            // }
+            var startDate = new Date(timesStamp + 24 * 60 * 60 * 1000 * (0 - (currenDay + 6) % 7))
+            var endDate = new Date(timesStamp + 24 * 60 * 60 * 1000 * (6 - (currenDay + 6) % 7))
+
+            return {
+                START: FormatDate(startDate),
+                END: FormatDate(endDate)
+            }
+        }
+        function FormatDate(date) {  
+            var seperator1 = "-";
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = year + seperator1 + month + seperator1 + strDate;
+            return currentdate
+        }
+        // console.log(getDates().START)
+
+        var a = 0;
+        console.log(a,window); // 输出 0 和 0
+        if(true){
+            console.log(a,window.a);// 函数提升，是块级作用域，输出 function a 和 0
+            a = 1;  // 取作用域最近的块级作用域的 function a ,且被重置为 1了，本质又是一个 变量的赋值。
+            console.log(a,window.a);// a 是指向块级作用域的 a, 输出 1 和 0
+            // function a(){} // 函数的声明，将执行函数的变量的定义同步到函数级的作用域。
+            console.log(a,window.a);// 输出 1 和 1
+            a = 21; // 仍然是函数定义块级作用域的 a ,重置为 21
+            console.log(a,window.a); // 输出为函数提升的块级作用域的 a, 输出 21，1
+            console.log("里面",a);
+        }
+        console.log("外部",a, window.a);
+    </script>
+</body>
+</html>

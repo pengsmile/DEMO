@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            height: 5000px;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="text" id="input">
+    <script>
+        /**
+         * new操作符做了这些事
+         * 它创建了一个全新的对象
+         * 它会被执行 [[Prototype]]（也就是 __proto__）链接
+         * 它使 this指向新创建的对象
+         * 通过 new创建的每个对象将最终被 [[Prototype]]链接到这个函数的 prototype对象上
+         * 如果函数没有返回对象类型 Object(包含 Functoin,Array,Date,RegExg,Error)，那么 new表达式中的函数调用将返回该对象引用。
+         */
+        function New(func) {
+            var res = {}; // 创建全新的对象
+            if (func.prototype !== null) {
+                res.__proto__ = func.prototype; // 改变this指向
+            }
+            var ret = func.apply(res, Array.prototype.slice.call(arguments, 1)); // 截取参数
+            if ((typeof ret === 'object' || typeof ret === 'function') && ret != null) {
+                return ret
+            }
+            return res;
+        }
+
+        function A(name, age) {
+            this.name = name;
+            this.age = age;
+        }
+        A.prototype.then = function () {
+            return 'hello, world';
+        }
+        var obj = New(A, '黑化', 20);
+        console.log(obj.__proto__);
+
+        function a(fun) {
+            var obj = {};
+            if (fun.prototype !== null) {
+                obj.__proto__ = fun.prototype
+            }
+            fun.apply(obj, Array.prototype.slice.call(arguments, 1));
+            return obj
+        }
+
+        /**
+         * 手动实现一个JSON.Stringify
+         * Boolean|Number|String 类型会自动转换成对应的原始值。
+         * undefined、任意函数以及 symbol，会被忽略（出现在非数组对象的属性值中时），或者被转换成 null（出现在数组中时）。
+         * 不可枚举的属性会被忽略
+         * 如果一个对象的属性值通过某种间接的方式指回该对象本身，即循环引用，属性也会被忽略。
+         */
+        function jsonStringify(obj) {
+            let type = typeof obj;
+            if (type !== 'object' || type === null) {
+                if (/string|undefined|function/.test(type)) {
+                    obj = '"' + obj + '"'
+                }
+                return String(obj)
+            } else {
+                let json = [];
+                let arr = (obj && obj.constructor == Array);
+                for (let k in obj) {
+                    let v = obj[k];
+                    let type = typeof v;
+                    if (/string|undefined|function/.test(type)) {
+                        v = '"' + v + '"'
+                    } else if (type == 'object') {
+                        v = jsonStringify(v);
+                    }
+                    json.push((arr ? '' : '"' + k + '":') + String(v));
+                }
+                return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}")
+            }
+        }
+        let str = jsonStringify({
+            a: 5
+        })
+        console.log(typeof str);
+
+        /**
+         * 实现一个 JSON.parse
+         * 核心： Function与 eval有相同的字符串参数特性。
+         * eval 与 Function 都有着动态编译js代码的作用，但是在实际的编程中并不推荐使用。
+         */
+
+        let jsonStr = '{"age" : 20, "name": "jack"}';
+        let json = (new Function('return' + jsonStr))();
+        console.log(json);
+
+        /**
+         * call语法 : fun.call(thisArg,arg1,arg2,...)，调用一个函数, 其具有一个指定的this值和分别地提供的参数(参数的列表)。
+         * apply语法 : func.apply(thisArg,[argsArray])，调用一个函数，以及作为一个数组（或类似数组对象）提供的参数。
+         * 
+         * 
+         */
+        // call 核心
+        // 将函数设为对象的属性
+        // 执行&删除这个函数
+        // 指定 this到函数并传入给定参数执行函数
+        // 如果不传入参数，默认指向为 window
+
+        Function.prototype.call2 = function (content = window) {
+            console.log(this);
+            content.fn = this;
+            let args = [...arguments].slice(1);
+            let result = content.fn(...args);
+            delete content.fn;
+            return result
+        }
+
+        // apply 实现
+
+        Function.prototype.apply2 = function (content = window) {
+            content.fn = this;
+            let result;
+            if (arguments[1]) {
+                result = content.fn(...arguments[1])
+            } else {
+                result = content.fn()
+            }
+            delete content.fn()
+            return result
+        }
+        Function.prototype.abc = function () {
+            console.log(this);
+        }
+        var foo = {
+            value: 1
+        }
+
+        function bar(name, age) {
+            console.log(name);
+            console.log(age);
+            console.log(this.value);
+        }
+        console.log(Function.prototype == bar.prototype);
+        bar.call2(foo, '史密斯', 23);
+        bar.abc();
+
+        /**
+         * 实现Function.bind()
+         * 会创建一个新函数。当这个新函数被调用时，bind() 的第一个参数将作为它运行时的 this，之后的一序列参数将会在传递的实参前传入作为它的参数。(来自于 MDN )
+         * 此外， bind实现需要考虑实例化后对原型链的影响。
+         */
+        // Function.prototype.bind2 = function (content) {
+        //     if (typeof this != 'function') {
+        //         throw Error('not a function');
+        //     }
+        //     // 若没有参数
+        //     let fn = this;
+        //     let args = [...arguments].slice(1);
+        //     let resFn = function () {
+        //         return fn.apply(this.instanceof resFn ? this : content, args.concat(...arguments));
+        //     }
+
+        //     function tmp() {
+
+        //     }
+        //     tmp.prototype = this.prototype;
+        //     resFn.prototype = new tmp();
+        //     return resFn;
+        // }
+
+        /**
+         * 手写深拷贝
+         * 
+         * 
+         */
+        // 乞丐版
+        let newObj = JSON.parse(JSON.stringify(obj));
+
+        // 通用版
+        function deepCopy(obj) {
+            if (typeof obj == 'object') {
+                var result = obj.constructor == Array ? [] : {};
+                for (let k in obj) {
+                    result[k] = typeof obj[k] == 'object' ? deepCopy(obj[k]) : obj[k];
+                }
+            } else {
+                var result = obj;
+            }
+            return result
+        }
+
+        /**
+         * 节流函数
+         * 可以理解为事件在一个管道中传输，加上这个节流阀以后，事件的流速就会减慢。实际上这个函数的作用就是如此，它可以将一个函数的调用频率限制在一定阈值内，例如 1s，那么 1s 内这个函数一定不会被调用两次
+         */
+        // 简单节流
+        function throttle(fn, waitTime) {
+            let prev = new Date();
+            return function () {
+                const args = arguments;
+                const now = new Date();
+                if (now - prev > waitTime) {
+                    fn.apply(this.args);
+                    prev = new Date();
+                }
+            }
+        }
+
+        // 复杂
+        const throttle2 = function (fn, delay, isDebounce) {
+            let timer;
+            let lastcall = 0;
+            return function (...args) {
+                if (isDebounce) {
+                    if (timer) clearInterval(timer)
+                    timer = setTimeout(() => {
+                        fn(...args);
+                    }, delay)
+                } else {
+                    const now = new Date().getTime();
+                    if (now - lastcall < delay) return
+                    lastcall = now;
+                    fn(...args);
+                }
+            }
+        }
+
+        /**
+         * 防抖动函数
+         * 当一次事件发生后，事件处理器要等一定阈值的时间，如果这段时间过去后 再也没有 事件发生，就处理最后一次发生的事件。假设还差 0.01 秒就到达指定时间，这时又来了一个事件，那么之前的等待作废，需要重新再等待指定时间。
+         * 
+         */
+        function debounce(fn, wait = 0, immediate) {
+            let timer = null;
+            return function () {
+                if (immediate) {
+                    fn.apply(this, arguments);
+                }
+                timer && clearInterval(timer)
+                timer = setTimeout(() => {
+                    fn.apply(this, arguments)
+                }, wait)
+            }
+        }
+        window.onscroll = throttle2(function () {
+            let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+            console.log(scrollTop);
+        }, 200, true);
+
+        /**
+        原型继承
+
+        */
+        function SubType() {
+            this.name = name
+        }
+        SubType.prototype.sayHi = function () {
+            console.log('Hi, my Name is' + this.name)
+        }
+
+        function age() {
+            this.age = 22;
+        }
+        age.prototype = new SubType();
+        age.prototype.getAge = function () {
+            console.log(`Hi, my name is ${this.name}, my age is ${this.age}`);
+        }
+        let instace = new age();
+        instace.getAge();
+
+        // 字符串提取
+
+        let newstr = '',
+            originStr = '2017-05-15T09:10:23 Europe/Paris';
+        originStr = originStr.split('T');
+        newstr = originStr[0] + '-' + originStr[1].substring(0, 8).replace(/(:)/g, '-');
+        console.log(newstr.split('-'));
+
+        var fn = function (num) {
+            return new Promise(function (resolve, reject) {
+                if (typeof num == 'number') {
+                    resolve(num);
+                } else {
+                    reject('TypeError');
+                }
+            })
+        }
+
+        fn(22).then(function (num) {
+                console.log('first: ' + num);
+                return num + 1;
+            })
+            .then(function (num) {
+                console.log('second: ' + num);
+                return num + 1;
+            })
+            .then(function (num) {
+                console.log('third: ' + num);
+                return num + 1;
+            });
+
+
+
+        const debounces = (func, delay = 200) => {
+            let timeout = null
+            return function () {
+                clearTimeout(timeout)
+                timeout = setTimeout(() => {
+                    func.apply(this, arguments)
+                }, delay)
+            }
+        }
+        const suggest = () => {
+            console.log('fetch')
+        }
+
+        const debounceSuggest = debounces(suggest, 500)
+
+        let btnSearch = document.getElementById('input')
+        btnSearch.addEventListener('input', () => {
+            console.log('input')
+            debounceSuggest()
+        })
+    </script>
+</body>
+
+</html>

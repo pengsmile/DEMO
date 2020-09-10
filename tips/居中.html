@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		.big {
+			width: 400px;
+			height: 400px;
+			background: red;
+			text-align: center;
+		}
+		.small {
+			width: 100px;
+			height: 100px;
+			background: pink;
+		}
+		.big::after, .small {
+			display: inline-block;
+			vertical-align: middle;
+		}
+		.big::after {
+			content: "";
+			height: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div class="big">
+		<div class="small">
+			
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .btn {
+            position: relative;
+            background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 14px 50px;
+            border-radius: 4px;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            outline: none;
+            overflow: hidden;
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
+            font-family: 'Lato', sans-serif;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        span {
+            position: relative;
+        }
+        
+        .btn::before {
+            --size: 0;
+            content: '';
+            position: absolute;
+            left: var(--x);
+            top: var(--y);
+            width: var(--size);
+            height: var(--size);
+            background: radial-gradient(circle closest-side, #a3b1f1, transparent);
+            transform: translate(-50%, -50%);
+            transition: all .2s ease, left 0s, top 0s;
+        }
+        
+        .btn:hover::before {
+            --size: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="btn">
+        <span>Button</span>
+    </button>
+    <script>
+        var btn = document.querySelector('.btn');
+        btn.onmousemove = e => {
+            const x = e.pageX - btn.offsetLeft
+            const y = e.pageY - btn.offsetTop
+
+            btn.style.setProperty('--x', x + 'px')
+            btn.style.setProperty('--y', y + 'px')
+        }
+
+        // var x = 10;
+
+        // function fn() {
+        //     console.log(x);
+        // }
+
+        // function show(f) {
+        //     var x = 20;
+        //     (function() {
+        //         f();
+        //     })
+        // }
+        // show(fn);
+
+        // function fn() {
+        //     var max = 10;
+        //     return function bar(x) {
+        //         if (x > max) {
+        //             console.log(x);
+        //         }
+        //     }
+        // }
+        // var f1 = fn(),
+        //     max = 100;
+        // f1(15);
+        function getfile () {
+      return new Promise((rel)=>{
+        setTimeout(()=>{
+          rel(123)
+        },1000)
+      })
+    }
+    function main () {
+        'use strice'
+        function timeout () {
+          console.log('1');
+          return new Promise( (resolve) =>{
+              setTimeout( ()=>{
+                  resolve('2')
+              },100)
+          })
+        }
+        function ajaxpromise () {
+          return new Promise( (resolve)=>{
+              getfile().then(res=>{
+                console.log('3')
+                resolve()
+              })
+          })
+        }
+        var p1 = Promise.race([timeout(), ajaxpromise()])
+        console.log('4')
+        console.log(p1)
+        p1.then(res=>{
+          console.log('5');
+        }).then(res =>{
+            console.log('6');
+        }).catch(err=>{
+            console.log('7');
+        }).catch(err=>{
+            console.log('8');
+        })
+    }
+    // main()
+
+    let status = new Promise( (resolve, reject)=>{
+        setTimeout(()=>{
+            resolve()
+        }, 10000)
+    } )
+    let statustwo = new Promise( (resolve, reject)=>{
+        setTimeout(()=>{
+            resolve()
+        }, 5000)
+    } )
+    statustwo.then(res=>{
+        console.log('1')
+    }).then(res=>{
+        console.log('2')
+    }).then(res=>{
+        console.log('3')
+    }).catch(err=>{
+        console.log(4);
+    })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,26 @@
+1. 什么是tap事件穿透？
+tap事件穿透就是，有多个层级上有绑定事件，最上层的绑定了tap事件，下层绑定了click事件，在执行完上层事件后会触发下层事件，进而出现事件穿透。如果下层是input标签，必穿透。
+tap事件实际上是在冒泡到body上时才触发，也就是Zepto的tap事件是绑定在document上的，所以会导致。
+
+2. 现象原因：
+根据zepto源码，我们很清楚地知道tap事件是通过绑定在document上的touch事件来模拟的。所以用户在点击tap事件（touchstart、touchend）时需要冒泡到document上才会触发。然而用户在touchstart和touchend时会触发click事件，但是此时click事件处于延时300ms，如果在这300ms之内tap事件已经完成，并将上层元素删除或隐藏。在300ms到来之际，根据click事件的原则，下层事件被执行，出现穿透现象。若下层是input元素，即使没有绑定click事件，使其默认聚焦弹出键盘，出现严重穿透现象。
+
+3. 解决方案：
+1)  使用github上有一个叫做fastclick的库来替代Zepto的tap事件；
+        github地址：https://github.com/ftlabs/fastclick
+
+        $(function(){ new FastClick(document.body); })
+
+2)  监听touchend事件或者touchstart来替代tap，并阻止冒泡 event.stopPropagation();
+    //JS代码
+    $(".js-close").on("touchend", function(event){  //这里使用touchstart事件也可以
+        // 阻止冒泡
+        event.stopPropagation();
+    });
+3) 使用CSS3的 pointer-events : true   和 pointer-events : none交替使用对下层元素设置，阻止触发click事件。(这样感觉很麻烦)
+
+4) 延迟一定的时间来隐藏上层元素。测试是超过320毫秒就不会出现穿透，与动画(fadeIn()，fadeOut())等配合，感觉良好;也可以 setTimeout
+    $(id).fadeIn(300);
+
+5) 终极解决方案是用click提代tap;但由于 click 延时，会导致一定的体验问题，最好用上fastclick插件
+

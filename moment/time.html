@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <p id="time"></p>
+    <script src="./node_modules/_moment@2.22.2@moment/moment.js"></script>
+    <script>
+        // Timedifference('2017-05-20 13:22:00', '2018-11-29 16:46:00');
+
+        Timedifference('2018-08-17 09:10:00', '2018-11-17');
+
+        // console.log(new Date(0))
+        // console.log(new Date().getTime());
+
+        // setInterval(function() {
+        //     Timedifference();
+        // }, 1000);
+
+        var start = moment("2017-05-20");
+        var dayWrapper = moment();
+        var du = moment().format('X');
+        console.log(dayWrapper.diff(start));
+
+        // function getTheTime() {
+        //     var t = new Date() - new Date(2017, 5, 20);
+        //     var d = Math.floor(t / 1000 / 60 / 60 / 24);
+        //     t -= d * 1000 * 60 * 60 * 24;
+        //     var h = Math.floor(t / 1000 / 60 / 60);
+        //     t -= h * 1000 * 60 * 60;
+        //     var m = Math.floor(t / 1000 / 60);
+        //     t -= m * 1000 * 60;
+        //     var s = Math.floor(t / 1000);
+        //     return d + "天" + h + "小时" + m + "分钟" + s + "秒";
+        // }
+
+        function Timedifference(start, end) {
+            var startTime = new Date(start),
+                endTime = new Date(end); //结束时间
+            var time = endTime.getTime() - startTime.getTime(); //时间差的毫秒数
+            //计算出相差天数
+            var days = Math.floor(time / (24 * 3600 * 1000)); //  二十四小时 * 一小时秒 * 每秒是1000毫秒
+            //计算出小时数
+            var leave1 = time % (24 * 3600 * 1000) //计算天数后剩余的毫秒数
+            var hours = Math.floor(leave1 / (3600 * 1000))
+                //计算相差分钟数
+            var leave2 = leave1 % (3600 * 1000) //计算小时数后剩余的毫秒数
+            var minutes = Math.floor(leave2 / (60 * 1000))
+                //计算相差秒数
+            var leave3 = leave2 % (60 * 1000) //计算分钟数后剩余的毫秒数
+            var seconds = Math.round(leave3 / 1000)
+            document.getElementById('time').innerHTML = days + '天' + hours + '时' + minutes + '分' + seconds + '秒';
+        }
+
+        var countdown = (times, callback) => {
+                let sum = times;
+                let time = setTimeout(function() {
+                    sum--;
+                    console.log(sum);
+                    if (sum == 0) {
+                        clearTimeout(time);
+                        callback && callback()
+                        return
+                    }
+                    setTimeout(arguments.callee, 1000);
+                }, 1000);
+            }
+            // countdown(30, function() {
+            //     alert('倒计时结束');
+            // });
+            // const a = {
+            //     i: 1,
+            //     toString: function() {
+            //         return a.i++;
+            //     }
+            // }
+
+        // if (a == 1 && a == 2 && a == 3) {
+        //     console.log('Hello World!');
+        // }
+
+
+
+        with({
+            get a() {
+                return Math.floor(Math.random() * 4);
+            }
+        }) {
+            for (var i = 0; i < 1000; i++) {
+                if (a == 1 && a == 2 && a == 3) {
+                    console.log("after " + (i + 1) + " trials, it becomes true finally!!!");
+                    break;
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

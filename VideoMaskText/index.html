@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        @font-face {
+            font-family: Biko;
+            src: url("./static/biko-black.woff");
+        }
+        video,
+        h1 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            
+        }
+
+        video {
+            object-fit: none;
+            
+        }
+
+        h1 {
+            font-size: 16vh;
+            font-family: Biko, sans-serif;
+            font-weight: 700;
+            /* line-height: 100vh; */
+            text-transform: uppercase;
+            text-align: center;
+            background: white;
+            mix-blend-mode: screen;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <video autoplay muted loop preload poster="./static/oceanshot.jpg">
+            <source src="./static/ocean-small.mp4" />
+        </video>
+        <h1 class="title">welcome</h1>
+    </div>
+    
+</body>
+
+</html>
